@@ -54,7 +54,11 @@ class PyMOLQtGUI(QtWidgets.QMainWindow, pymol._gui.PyMOLDesktopGUI):
             self.pymolwidget.pymol.button(*args)
 
     def closeEvent(self, event):
-        self.cmd.quit()
+        ret = QtWidgets.QMessageBox.question(self, 'PyMOL', "Exit program?", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
+        if ret == QtWidgets.QMessageBox.Yes:
+            self.cmd.quit()
+        else:
+            event.ignore()
 
     # for thread-safe viewport command
     viewportsignal = QtCore.Signal(int, int)
@@ -867,7 +871,9 @@ PyMOL> color ye<TAB>    (will autocomplete "yellow")
         self.cmd.cd(dname or '.', quiet=0)
 
     def confirm_quit(self):
-        QtWidgets.qApp.quit()
+        ret = QtWidgets.QMessageBox.question(self, 'PyMOL', "Exit program?", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
+        if ret == QtWidgets.QMessageBox.Yes:
+            QtWidgets.qApp.quit()
 
     def settings_edit_all_dialog(self):
         from .advanced_settings_gui import PyMOLAdvancedSettings
